@@ -4,14 +4,17 @@ import ky from "~/utils/ky";
 export const useTodosStore = defineStore("todos", {
   state: () => ({
     todos: [],
-    isTodosLoading: false,
   }),
 
   actions: {
+    async createTodo(payload) {
+      const todo = await ky.post("/todos", { body: payload }).json();
+      this.todos.push(todo);
+
+      return todo;
+    },
     async fetchTodos() {
-      this.isTodosLoading = true;
       this.todos = await ky.get("todos").json();
-      this.isTodosLoading = false;
     },
   },
 });

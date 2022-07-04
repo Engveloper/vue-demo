@@ -40,7 +40,11 @@ export default {
 
   setup() {
     const todosStore = useTodosStore();
-    const { callAction, isLoading } = useAsyncAction(todosStore.fetchTodos);
+    const { callAction: fetchTodos, isLoading } = useAsyncAction(
+      todosStore.fetchTodos
+    );
+    const { callAction: createTodo, isLoading: isCreateLoading } =
+      useAsyncAction(todosStore.createTodo);
     const { todos } = storeToRefs(todosStore);
 
     const { errors, handleSubmit } = useForm({
