@@ -3,7 +3,7 @@ import { ref } from "vue";
 /**
  * @param {Promise} action
  * */
-export function useAsyncAction(action, { isLoading: { value = "" } = {} }) {
+export function useAsyncAction(action) {
   const isLoading = ref(false);
 
   const callAction = async (payload, { error = "", success = "" }) => {
