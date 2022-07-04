@@ -4,19 +4,12 @@
   <div v-if="isLoading">Loading...</div>
   <div v-else v-for="todo in todos">{{ todo.description }}</div>
 
-  <form>
+  <form class="space-y-2" @submit.prevent="onSubmit">
     <div class="mb-6">
-      <label
-        for="description"
-        class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-        >Your description</label
-      >
-      <input
-        type="text"
-        id="description"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        placeholder="name@flowbite.com"
-        required
+      <BaseInput
+        v-model="description"
+        label="Description"
+        :error="errors.description"
       />
     </div>
     <button
@@ -29,7 +22,7 @@
 </template>
 
 <script>
-import { useForm, useField } from "vee-validate";
+import { ErrorMessage, useForm, useField } from "vee-validate";
 import * as yup from "yup";
 
 import { onMounted } from "vue";
@@ -37,16 +30,25 @@ import { storeToRefs } from "pinia";
 
 import { useTodosStore } from "./store/todos";
 import { useAsyncAction } from "./hooks/useAsyncAction";
+import BaseInput from "./components/BaseInput.vue";
 
 export default {
+  components: {
+    BaseInput,
+    ErrorMessage,
+  },
+
   setup() {
     const todosStore = useTodosStore();
     const { callAction, isLoading } = useAsyncAction(todosStore.fetchTodos);
-    const { isTodosLoading, todos } = storeToRefs(todosStore);
+    const { todos } = storeToRefs(todosStore);
 
     const { errors, handleSubmit } = useForm({
+      initialValues: {
+        description: "",
+      },
       validationSchema: yup.object().shape({
-        description: yup.string().required(),
+        description: yup.string().required().label("Description"),
       }),
     });
 

@@ -6,7 +6,7 @@ import { ref } from "vue";
 export function useAsyncAction(action) {
   const isLoading = ref(false);
 
-  const callAction = async (payload, { error = "", success = "" }) => {
+  const callAction = async (payload, { error = "", success = "" } = {}) => {
     try {
       isLoading.value = true;
       await action(payload);
